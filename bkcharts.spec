@@ -4,12 +4,13 @@
 #
 Name     : bkcharts
 Version  : 0.2
-Release  : 1
-URL      : https://pypi.python.org/packages/8f/bf/f4975a10ce859da55e17c16fff45159f224344a6220e79c528ab288d0720/bkcharts-0.2.tar.gz
-Source0  : https://pypi.python.org/packages/8f/bf/f4975a10ce859da55e17c16fff45159f224344a6220e79c528ab288d0720/bkcharts-0.2.tar.gz
+Release  : 2
+URL      : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
+Source0  : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
 Summary  : High level chart types built on top of Bokeh
 Group    : Development/Tools
 License  : BSD-3-Clause
+Requires: bkcharts-legacypython
 Requires: bkcharts-python
 Requires: numpy
 Requires: six
@@ -22,9 +23,18 @@ BuildRequires : setuptools
 %description
 No detailed description available
 
+%package legacypython
+Summary: legacypython components for the bkcharts package.
+Group: Default
+
+%description legacypython
+legacypython components for the bkcharts package.
+
+
 %package python
 Summary: python components for the bkcharts package.
 Group: Default
+Requires: bkcharts-legacypython
 
 %description python
 python components for the bkcharts package.
@@ -38,12 +48,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1497452276
+export SOURCE_DATE_EPOCH=1504998461
 python2 setup.py build -b py2
 python3 setup.py build -b py3
 
 %install
-export SOURCE_DATE_EPOCH=1497452276
+export SOURCE_DATE_EPOCH=1504998461
 rm -rf %{buildroot}
 python2 -tt setup.py build -b py2 install --root=%{buildroot} --force
 python3 -tt setup.py build -b py3 install --root=%{buildroot} --force
@@ -54,7 +64,10 @@ echo ----[ mark ]----
 %files
 %defattr(-,root,root,-)
 
-%files python
+%files legacypython
 %defattr(-,root,root,-)
 /usr/lib/python2*/*
+
+%files python
+%defattr(-,root,root,-)
 /usr/lib/python3*/*
