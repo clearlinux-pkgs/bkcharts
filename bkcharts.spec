@@ -4,24 +4,32 @@
 #
 Name     : bkcharts
 Version  : 0.2
-Release  : 12
+Release  : 13
 URL      : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
 Source0  : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
 Summary  : High level chart types built on top of Bokeh
 Group    : Development/Tools
 License  : BSD-3-Clause
 Requires: bkcharts-python3
+Requires: bkcharts-license
 Requires: bkcharts-python
 Requires: numpy
 Requires: six
 BuildRequires : pbr
 BuildRequires : pip
-
 BuildRequires : python3-dev
 BuildRequires : setuptools
 
 %description
 No detailed description available
+
+%package license
+Summary: license components for the bkcharts package.
+Group: Default
+
+%description license
+license components for the bkcharts package.
+
 
 %package python
 Summary: python components for the bkcharts package.
@@ -49,11 +57,13 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1523286259
+export SOURCE_DATE_EPOCH=1529093166
 python3 setup.py build -b py3
 
 %install
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/bkcharts
+cp LICENSE.txt %{buildroot}/usr/share/doc/bkcharts/LICENSE.txt
 python3 -tt setup.py build -b py3 install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
@@ -61,6 +71,10 @@ echo ----[ mark ]----
 
 %files
 %defattr(-,root,root,-)
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/bkcharts/LICENSE.txt
 
 %files python
 %defattr(-,root,root,-)
