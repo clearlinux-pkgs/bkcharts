@@ -4,7 +4,7 @@
 #
 Name     : bkcharts
 Version  : 0.2
-Release  : 13
+Release  : 14
 URL      : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
 Source0  : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
 Summary  : High level chart types built on top of Bokeh
