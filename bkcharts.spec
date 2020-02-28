@@ -4,21 +4,20 @@
 #
 Name     : bkcharts
 Version  : 0.2
-Release  : 24
+Release  : 25
 URL      : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
 Source0  : http://pypi.debian.net/bkcharts/bkcharts-0.2.tar.gz
 Summary  : High level chart types built on top of Bokeh
 Group    : Development/Tools
 License  : BSD-3-Clause
-Requires: bkcharts-python3
-Requires: bkcharts-license
-Requires: bkcharts-python
+Requires: bkcharts-license = %{version}-%{release}
+Requires: bkcharts-python = %{version}-%{release}
+Requires: bkcharts-python3 = %{version}-%{release}
 Requires: numpy
 Requires: six
-BuildRequires : pbr
-BuildRequires : pip
-BuildRequires : python3-dev
-BuildRequires : setuptools
+BuildRequires : buildreq-distutils3
+BuildRequires : numpy
+BuildRequires : six
 
 %description
 No detailed description available
@@ -34,7 +33,7 @@ license components for the bkcharts package.
 %package python
 Summary: python components for the bkcharts package.
 Group: Default
-Requires: bkcharts-python3
+Requires: bkcharts-python3 = %{version}-%{release}
 
 %description python
 python components for the bkcharts package.
@@ -44,6 +43,7 @@ python components for the bkcharts package.
 Summary: python3 components for the bkcharts package.
 Group: Default
 Requires: python3-core
+Provides: pypi(bkcharts)
 
 %description python3
 python3 components for the bkcharts package.
@@ -51,20 +51,29 @@ python3 components for the bkcharts package.
 
 %prep
 %setup -q -n bkcharts-0.2
+cd %{_builddir}/bkcharts-0.2
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1529093166
-python3 setup.py build -b py3
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1582850741
+# -Werror is for werrorists
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$CFLAGS -fno-lto "
+export FFLAGS="$CFLAGS -fno-lto "
+export CXXFLAGS="$CXXFLAGS -fno-lto "
+export MAKEFLAGS=%{?_smp_mflags}
+python3 setup.py build
 
 %install
+export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/bkcharts
-cp LICENSE.txt %{buildroot}/usr/share/doc/bkcharts/LICENSE.txt
-python3 -tt setup.py build -b py3 install --root=%{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/bkcharts
+cp %{_builddir}/bkcharts-0.2/LICENSE.txt %{buildroot}/usr/share/package-licenses/bkcharts/6b22af92424fc948d99a21b8a99a5306fe67ce1b
+python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
@@ -73,8 +82,8 @@ echo ----[ mark ]----
 %defattr(-,root,root,-)
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/bkcharts/LICENSE.txt
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/bkcharts/6b22af92424fc948d99a21b8a99a5306fe67ce1b
 
 %files python
 %defattr(-,root,root,-)
